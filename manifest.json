@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "ResponseTimer",
+  "version": "1.0",
+  "description": "Track average email response times in Gmail",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "https://mail.google.com/mail/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [{
+    "matches": [
+      "https://mail.google.com/*",
+      "https://mail.google.com/mail/*"
+    ],
+    "js": ["content.js"],
+    "css": ["styles.css"]
+  }],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [{
+    "resources": ["welcome.html", "privacy-policy.html"],
+    "matches": ["https://mail.google.com/*"]
+  }]
+} 

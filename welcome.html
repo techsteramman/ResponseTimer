@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ResponseTimer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: -apple-system, SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      padding: 32px;
+    }
+
+    .welcome-card {
+      width: 100%;
+      max-width: 460px;
+      text-align: center;
+    }
+
+    .icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 44px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .highlight {
+      color: #2997ff;
+    }
+
+    .description {
+      font-size: 18px;
+      color: #86868b;
+      margin-bottom: 40px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+
+    .steps {
+      margin-bottom: 40px;
+    }
+
+    .steps h3 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #2997ff;
+    }
+
+    .steps ol {
+      list-style: none;
+      counter-reset: steps;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .steps li {
+      font-size: 16px;
+      margin: 12px 0;
+      padding-left: 28px;
+      position: relative;
+      color: #86868b;
+      font-weight: 500;
+    }
+
+    .steps li::before {
+      counter-increment: steps;
+      content: "0" counter(steps);
+      position: absolute;
+      left: 0;
+      color: #2997ff;
+      font-weight: 700;
+    }
+
+    .auth-button {
+      background: #2997ff;
+      color: #000;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 980px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .auth-button:hover {
+      background: #0071e3;
+      transform: scale(1.02);
+    }
+
+    .error-message {
+      color: #ff453a;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-card">
+    <img src="icons/icon128.png" alt="ResponseTimer" class="icon">
+    <h1>Track response times like <span class="highlight">Sam Altman</span></h1>
+    
+    <p class="description">
+      Measure how quickly people respond to your emails, a key signal used by top investors to evaluate founders.
+    </p>
+    
+    <div class="steps">
+      <h3>How it works</h3>
+      <ol>
+        <li>Select the threads you want to track</li>
+        <li>View analytics in the extension popup</li>
+        <li>All processing happens locally</li>
+      </ol>
+    </div>
+
+    <p id="errorMessage" class="error-message"></p>
+  </div>
+
+  <script src="welcome.js"></script>
+</body>
+</html> 
