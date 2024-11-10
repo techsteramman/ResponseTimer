@@ -118,6 +118,65 @@
       font-weight: 500;
       display: none;
     }
+
+    .consent-section {
+      background: rgba(41, 151, 255, 0.1);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      text-align: left;
+    }
+
+    .consent-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .consent-checkbox input {
+      margin-top: 4px;
+    }
+
+    .email-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #86868b;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      margin: 16px 0;
+      font-size: 16px;
+    }
+
+    .email-input:focus {
+      border-color: #2997ff;
+      outline: none;
+    }
+
+    .continue-button {
+      background: #2997ff;
+      color: #000;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 980px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .continue-button.enabled {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .continue-button.enabled:hover {
+      background: #0071e3;
+      transform: scale(1.02);
+    }
   </style>
 </head>
 <body>
@@ -128,17 +187,26 @@
     <p class="description">
       Measure how quickly people respond to your emails, a key signal used by top investors to evaluate founders.
     </p>
-    
-    <div class="steps">
-      <h3>How it works</h3>
-      <ol>
-        <li>Select the threads you want to track</li>
-        <li>View analytics in the extension popup</li>
-        <li>All processing happens locally</li>
-      </ol>
+
+    <div class="consent-section">
+      <h3>Let's get started</h3>
+      <input type="email" 
+             class="email-input" 
+             id="userEmail" 
+             placeholder="Enter your email address"
+             required>
+      
+      <div class="consent-checkbox">
+        <input type="checkbox" id="consentCheckbox">
+        <label for="consentCheckbox">
+          I understand that ResponseTimer will track response times for my selected email threads. 
+          All data is processed locally and no email content is stored or transmitted.
+          <a href="privacy-policy.html" target="_blank" class="highlight">Privacy Policy</a>
+        </label>
+      </div>
     </div>
 
-    <p id="errorMessage" class="error-message"></p>
+    <button id="continueButton" class="continue-button">Continue to Gmail</button>
   </div>
 
   <script src="welcome.js"></script>

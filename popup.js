@@ -1,8 +1,37 @@
 document.addEventListener('DOMContentLoaded', function() {
-    loadRecipientStats();
+    // First check if user has completed welcome flow
+    chrome.storage.local.get(['userEmail', 'consentGiven'], function(result) {
+        if (!result.userEmail || !result.consentGiven) {
+            // User hasn't completed welcome flow, show welcome message
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h2>Welcome to ResponseTimer!</h2>
+                    <p style="margin: 15px 0;">Please complete the setup to start tracking response times.</p>
+                    <a href="#" id="setupLink" style="
+                        display: inline-block;
+                        background: #0b57d0;
+                        color: white;
+                        padding: 10px 20px;
+                        border-radius: 20px;
+                        text-decoration: none;
+                        margin-top: 10px;
+                    ">Complete Setup</a>
+                </div>
+            `;
+
+            document.getElementById('setupLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                chrome.tabs.create({ url: 'welcome.html' });
+            });
+            return;
+        }
+
+        // If user has completed setup, load the normal popup content
+        loadRecipientStats();
+    });
     
     // Add change handler for sort select
-    document.querySelector('.sort-select').addEventListener('change', (e) => {
+    document.querySelector('.sort-select')?.addEventListener('change', (e) => {
         loadRecipientStats(e.target.value);
     });
 });

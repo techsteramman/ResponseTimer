@@ -3,11 +3,20 @@ let currentThreadId = null;
 let currentRecipient = null;
 let isThreadTracked = false;
 let isExtensionValid = true;
+let userEmail = null;
 
 // Initialize the extension
 async function initializeExtension() {
     try {
-        // Test storage access
+        // Check for user consent first
+        const result = await chrome.storage.local.get(['userEmail', 'consentGiven']);
+        if (!result.consentGiven || !result.userEmail) {
+            console.log('Consent not given or email not set');
+            isExtensionValid = false;
+            return;
+        }
+        
+        userEmail = result.userEmail;
         await chrome.storage.local.get(['test']);
         startObserver();
     } catch (error) {
@@ -123,7 +132,7 @@ function addTrackingButton() {
 
 // Update thread information
 function updateThreadInfo() {
-    if (!isExtensionValid) return;
+    if (!isExtensionValid || !userEmail) return;
 
     try {
         // Only process if we're in a thread view
@@ -135,7 +144,7 @@ function updateThreadInfo() {
         if (newThreadId === currentThreadId) return;
 
         // Get your email first
-        const myEmail = 'amman@tiakiai.com'; // Your email address
+        const myEmail = userEmail; // Instead of 'amman@tiakiai.com'
 
         // Look for email addresses in the thread
         const emailHeaders = document.querySelectorAll('.gD');
