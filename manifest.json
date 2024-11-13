@@ -5,7 +5,6 @@
   "description": "Track average email response times in Gmail",
   "permissions": [
     "storage",
-    "activeTab",
     "tabs"
   ],
   "host_permissions": [
