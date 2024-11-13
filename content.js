@@ -5,22 +5,37 @@ let isThreadTracked = false;
 let isExtensionValid = true;
 let userEmail = null;
 
+// Add this function to get the current Gmail user's email
+function getCurrentGmailUser() {
+    const emailElement = document.querySelector('[aria-label^="Google Account:"]');
+    if (emailElement) {
+        const emailMatch = emailElement.getAttribute('aria-label').match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/);
+        return emailMatch ? emailMatch[0] : null;
+    }
+    return null;
+}
+
 // Initialize the extension
 async function initializeExtension() {
     try {
-        // Check for user consent first
-        const result = await chrome.storage.local.get(['userEmail', 'consentGiven']);
-        if (!result.consentGiven || !result.userEmail) {
-            console.log('Consent not given or email not set');
+        const currentEmail = getCurrentGmailUser();
+        if (!currentEmail) {
+            console.log('Could not detect Gmail user');
             isExtensionValid = false;
             return;
         }
         
-        userEmail = result.userEmail;
+        // Update storage with current email
+        await chrome.storage.local.set({
+            userEmail: currentEmail,
+            consentGiven: true
+        });
+        
+        userEmail = currentEmail;
         await chrome.storage.local.get(['test']);
         startObserver();
     } catch (error) {
-        console.log('Extension context invalid, will retry...');
+        console.log('Extension context invalid, will retry...', error);
         setTimeout(initializeExtension, 1000);
     }
 }
@@ -292,7 +307,7 @@ async function handleTrackButtonClick() {
         // Wait for everything to load
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const myEmail = 'amman@tiakiai.com';
+        const myEmail = userEmail;
         
         // Get all email containers in chronological order
         const emailContainers = Array.from(document.querySelectorAll('.kv, .h7'));
@@ -341,7 +356,9 @@ async function handleTrackButtonClick() {
                 sender: email.sender,
                 time: new Date(email.timestamp),
                 isMyEmail: email.sender === myEmail,
-                isRecipient: email.sender === currentRecipient
+                isRecipient: email.sender === currentRecipient,
+                myEmail: myEmail,
+                currentRecipient: currentRecipient
             });
 
             if (email.sender === myEmail) {
@@ -349,10 +366,11 @@ async function handleTrackButtonClick() {
                 console.log('Found my email at:', new Date(lastMyEmailTime));
             } else if (email.sender === currentRecipient && lastMyEmailTime) {
                 const responseTime = email.timestamp - lastMyEmailTime;
-                console.log('Found response:', {
-                    myEmailTime: new Date(lastMyEmailTime),
-                    responseTime: new Date(email.timestamp),
-                    timeDiff: `${responseTime / (1000 * 60)} minutes`
+                console.log('Response found:', {
+                    from: email.sender,
+                    responseTime: responseTime / (1000 * 60) + ' minutes',
+                    myEmail: myEmail,
+                    currentRecipient: currentRecipient
                 });
                 responseTimes.push(responseTime);
                 lastMyEmailTime = null; // Reset for next response
